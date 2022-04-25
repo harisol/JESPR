@@ -10,21 +10,20 @@ module.exports = {
     logging: false,
     dialect: 'postgres',
   },
-  test: {
-    uri: process.env.DEV_DATABASE_URI, // A full database URI
-    host: process.env.TEST_DATABASE_HOST,
-    username: process.env.TEST_DATABASE_USERNAME,
-    password: process.env.TEST_DATABASE_PASSWORD,
-    database: process.env.TEST_DATABASE_NAME,
-    logging: false,
-    dialect: 'postgres',
-  },
   production: {
-    uri: process.env.DEV_DATABASE_URI, // A full database URI
+    uri: process.env.PROD_DATABASE_URI, // A full database URI
     host: process.env.PROD_DATABASE_HOST,
     username: process.env.PROD_DATABASE_USERNAME,
     password: process.env.PROD_DATABASE_PASSWORD,
     database: process.env.PROD_DATABASE_NAME,
+    logging: false,
+    dialect: 'postgres',
+  },
+  test: {
+    host: process.env.TEST_DATABASE_HOST,
+    username: process.env.TEST_DATABASE_USERNAME,
+    password: process.env.TEST_DATABASE_PASSWORD,
+    database: process.env.TEST_DATABASE_NAME,
     logging: false,
     dialect: 'postgres',
   },

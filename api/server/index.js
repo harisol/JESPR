@@ -9,7 +9,9 @@ server.use(express.json());
 
 // logging on each API hit
 server.use((req, _res, next) => {
-    console.log('accessing', req.method, req.originalUrl);
+    if (server.get('env') !== 'test') {
+        console.log('accessing', req.method, req.originalUrl);
+    }
     next();
 });
 

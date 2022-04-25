@@ -30,7 +30,11 @@ Object.values(models)
     .filter(model => typeof model.associate === "function")
     .forEach(model => model.associate(models));
 
-console.log('model has been initialized');
+if (env === 'test') {
+    console.log(`sequelize config is using environment ${env}`);
+} else {
+    console.log('model has been initialized');
+}
 
 module.exports = {
     ...models,
