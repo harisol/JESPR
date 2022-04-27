@@ -14,8 +14,11 @@ const router = Router();
 // register jwt middleware to this router
 router.use(checkToken);
 
-router.get('/', (_req, res) => res.json({ message: 'Welcome' }))
-router.post('/login', validateLogin(), auth.login); // for logout, just detroy token in client storage
+router.get('/', (_req, res) => res.json({ message: 'Welcome' }));
+router.get('/check-token', (_req, res) => res.json({ message: 'token valid' }));
+
+// for logout, just detroy token in client storage
+router.post('/login', validateLogin(), auth.login);
 
 router.get('/role', adminOnly, roleController.listRole);
 router.post('/role', validateCreateRole(), roleController.createRole);

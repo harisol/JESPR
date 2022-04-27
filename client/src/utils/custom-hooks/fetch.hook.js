@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { cookieKeyAuth } from "./config";
-import { getCookie } from "./helpers";
+import { cookieKeyAuth } from "../config";
+import { getCookie } from "../helpers";
 
 const baseUrl = '/api'; // in development, we set our host at 'proxy' property in package.json
 // const baseUrl = 'https://mysite.com'; // for production
@@ -30,19 +30,19 @@ export const useFetchGet = (endpoint, queryParams, headerOptions) => {
   const clearError = () => setError('');
   const startFetch = () => {
     setIsLoading(true);
+
     fetch(url, requestOptions).then(async res => {
       const data = await res.json();
       if (!res.ok) {
         throw (Error(data.message || 'unexpected error'));
       }
-
-      setIsLoading(false);
       setData(data);
     }).catch(err => {
       const message = err.message || err;
-      setIsLoading(false);
       setError(message);
       console.error('fetch error:', message);
+    }).finally(_ => {
+      setIsLoading(false);
     });
   };
 
@@ -84,14 +84,13 @@ export const useFetchPost = (endpoint, body, queryParams, headerOptions) => {
       if (!res.ok) {
         throw (Error(data.errors || data.message || 'unexpected error'));
       }
-
-      setIsLoading(false);
       setData(data);
     }).catch(err => {
       const message = err.message || err;
-      setIsLoading(false);
       setError(message);
       console.error('fetch error:', message);
+    }).finally(_ => {
+      setIsLoading(false);
     });
   };  
 

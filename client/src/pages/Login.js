@@ -1,25 +1,38 @@
 import { useContext, useEffect, useState } from "react";
-import { useFetchPost } from "../utils/fetch-hook";
-import { cookieKeyAuth } from "../utils/config";
+import { useFetchPost } from "../utils/custom-hooks/fetch.hook";
+import { cookieKeyAuth, cookieKeyUsername } from "../utils/config";
 import { AuthContext } from "../utils/contexts";
-import { setCookie } from "../utils/helpers";
+import { getCookie, setCookie } from "../utils/helpers";
 import AlertBox from "../components/AlertBox";
+import { useHistory } from "react-router-dom";
 
 const Login = () => {
   const { setAuthed } = useContext(AuthContext);
   const [username, setUsername] = useState('');
   const { data, isLoading, error, startFetch } = useFetchPost(`/login`, { username });
+  const history = useHistory();
 
   const submitForm = (e) => {
     e.preventDefault();
     startFetch();
   }
+
+  // if already login, redirect to root page
+  useEffect(() => {
+    const cookie = getCookie(cookieKeyAuth);
+    if (cookie) {
+      history.push('/');
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   
+  // login success, redirect to root page
   useEffect(() => {
     if (data.accessToken) {
       setCookie(cookieKeyAuth, data.accessToken, 2);
-      setCookie(AuthContext, username, 2);
+      setCookie(cookieKeyUsername, username, 2);
       setAuthed(true);
+      history.push('/');
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
