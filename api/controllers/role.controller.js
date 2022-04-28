@@ -1,9 +1,8 @@
 const { Role } = require('../database/models');
-const { logicError } = require('../etc/error-handler');
 const { defaultLimit } = require('../etc/my-config');
 
 /** @type {import("express").RequestHandler} */
-exports.listRole = (req, res) => {
+exports.listRole = (req, res, next) => {
     const { limit, page } = req.query;
 
     Role.findAll({
@@ -12,12 +11,12 @@ exports.listRole = (req, res) => {
     }).then((roles) => {
         res.status(200).json({ roles });
     }).catch((error) => {
-        logicError(error, res);
+        next(error);
     });
 };
 
 /** @type {import("express").RequestHandler} */
-exports.createRole = (req, res) => {
+exports.createRole = (req, res, next) => {
     const { rolename } = req.body;
 
     Role.create({
@@ -25,6 +24,6 @@ exports.createRole = (req, res) => {
     }).then((role) => {
         res.status(201).json({ role });
     }).catch((error) => {
-        logicError(error, res);
+        next(error);
     });
 };

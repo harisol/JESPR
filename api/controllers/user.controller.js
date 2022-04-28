@@ -1,9 +1,8 @@
 const { User } = require('../database/models');
-const { logicError } = require('../etc/error-handler');
 const { defaultLimit } = require('../etc/my-config');
 
 /** @type {import("express").RequestHandler} */
-exports.listUser = (req, res) => {
+exports.listUser = (req, res, next) => {
     const limit = req.query.limit || defaultLimit;
     const page = req.query.page;
 
@@ -32,12 +31,12 @@ exports.listUser = (req, res) => {
     }).then((users) => {
         res.status(200).json({ users });
     }).catch((error) => {
-        logicError(error, res);
+        next(error);
     });
 };
 
 /** @type {import("express").RequestHandler} */
-exports.createUser = (req, res) => {
+exports.createUser = (req, res, next) => {
     const { username, role_id } = req.body;
 
     User.create({
@@ -46,6 +45,6 @@ exports.createUser = (req, res) => {
     }).then(user => {
         res.status(201).json({ user });
     }).catch(error => {
-        logicError(error, res);
+        next(error);
     });
 };

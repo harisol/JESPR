@@ -1,9 +1,8 @@
 const { User } = require("../database/models");
-const { internalServerError } = require("../etc/error-handler");
 const { signJWT } = require("../etc/my-jwt");
 
 /** @type {import("express").RequestHandler} */
-exports.login = (req, res) => {
+exports.login = (req, res, next) => {
     const username = req.body.username;
     User.findByUserName(username)
         .then(async user => {
@@ -29,6 +28,6 @@ exports.login = (req, res) => {
             });
 
         }).catch(error => {
-            internalServerError(error, res)
+            next(error);
         });
 };

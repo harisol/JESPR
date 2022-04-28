@@ -1,9 +1,8 @@
 const { Outlet, UserOutlet } = require('../database/models');
-const { logicError } = require('../etc/error-handler');
 const { defaultLimit } = require('../etc/my-config');
 
 /** @type {import("express").RequestHandler} */
-exports.listOutlet = async (req, res) => {
+exports.listOutlet = async (req, res, next) => {
     const limit = req.query.limit || defaultLimit;
     const page = req.query.page;
     const offset = page
@@ -30,12 +29,12 @@ exports.listOutlet = async (req, res) => {
                 });
         }
     } catch (error) {
-        logicError(error, res);
+        next(error);
     }
 };
 
 /** @type {import("express").RequestHandler} */
-exports.createOutlet = (req, res) => {
+exports.createOutlet = (req, res, next) => {
     const { name } = req.body;
 
     Outlet.create({
@@ -43,6 +42,6 @@ exports.createOutlet = (req, res) => {
     }).then(outlet => {
         res.status(201).json({ outlet });
     }).catch(error => {
-        logicError(error, res);
+        next(error);
     });
 };

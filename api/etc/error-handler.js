@@ -1,23 +1,48 @@
+exports.CustomError = class extends Error {
+    
+    /**
+     * @param {Number} statusCode
+     * @param {String} message
+     */
+    constructor(statusCode, message) {
+      super();
+      this.statusCode = statusCode;
+      this.message = message;
+    }
+}
+
 /** @type {import("express").RequestHandler} */
-exports.notFoundError = (req, res) => {
-    res.status(404).json({ message: 'page not found' });
+exports.notFoundError = (_req, _res) => {
+    // this goes to function 'handleError' below
+    throw (new this.CustomError(404, 'page not found'));
 }
 
-exports.internalServerError = (err, res) => {
-    res.status(500).json({ message: err.message || err });
-}
-
-exports.logicError = (err, res) => {
-    console.log({ errorName: err.name });
+/**
+ * handle uncaught error, except uncaught promise rejection.
+ * you must cath promise rejection and call 'next()'
+ * inside it by yourself
+ * 
+ * @type {import("express").ErrorRequestHandler}
+ */
+exports.handleError = (err, _req, res, _next) => {
+    const { name, statusCode, message, errors } = err;
 
     // sequelize error
-    if (err.name?.includes('Sequelize') && Array.isArray(err.errors)) {
+    if (name?.includes('Sequelize') && Array.isArray(errors)) {
         return res.status(400).json({
-            message: err.message || err,
-            errors: err.errors.map(e => e.message)
+            message: message,
+            errors: errors.map(e => e.message)
         });
     }
 
-    // unexpected error
-    this.internalServerError(err, res)
+    // show not common error format to console 
+    if (!message && typeof err !== 'string') {
+        console.log(err);
+    }
+
+    res.status(statusCode || 500).json({
+        message: typeof err === 'string'
+            ? err
+            : message || 'unexpected error'
+    });
 }
