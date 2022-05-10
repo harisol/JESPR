@@ -8,13 +8,16 @@ const { validateCreateRole } = require('../validation/role.validation');
 const { validateCreateUser } = require('../validation/user.validation');
 const { validateCreateOutlet } = require('../validation/outlet.validation');
 const { validateLogin } = require('../validation/auth.validation');
+const { date } = require('../etc/helper');
 
 const router = Router();
 
 // register jwt middleware to this router
 router.use(checkToken);
 
-router.get('/', (_req, res) => res.json({ message: 'Welcome' }));
+router.get('/', (_req, res) => {
+    res.json({ message: `Today is ${date('dddd, DD MMM YYYY')}` });
+});
 router.get('/check-token', (_req, res) => res.json({ message: 'token valid' }));
 
 // for logout, just detroy token in client storage
