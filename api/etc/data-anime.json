@@ -1,0 +1,45 @@
+{
+  "animes": [
+    {
+      "id": 1,
+      "title": "Spirited Away",
+      "director": "Hayao Miyazaki",
+      "year": 2001
+    },
+    {
+      "id": 2,
+      "title": "Byousoku 5 Centimeter",
+      "director": "Makoto Shinkai",
+      "year": 2007
+    },
+    {
+      "id": 3,
+      "title": "Kotonoha no Niwa",
+      "director": "Makoto Shinkai",
+      "year": 2013
+    },
+    {
+      "id": 4,
+      "title": "Kimi no Nawa",
+      "director": "Makoto Shinkai",
+      "year": 2016
+    },
+    {
+      "title": "conan",
+      "year": 2000,
+      "id": 5
+    },
+    {
+      "title": "doraemon",
+      "director": "fujiko",
+      "year": 2000,
+      "id": 6
+    },
+    {
+      "title": "doraemon z",
+      "director": "fujiko",
+      "year": 2000,
+      "id": 7
+    }
+  ]
+}
