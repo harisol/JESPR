@@ -12,9 +12,9 @@ exports.CustomError = class extends Error {
 }
 
 /** @type {import("express").RequestHandler} */
-exports.notFoundError = (_req, _res) => {
+exports.notFoundError = (_req, _res, next) => {
     // this goes to function 'handleError' below
-    throw (new this.CustomError(404, 'page not found'));
+    next(new this.CustomError(404, 'page not found'));
 }
 
 /**

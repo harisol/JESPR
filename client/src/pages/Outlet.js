@@ -1,13 +1,15 @@
 import { useEffect } from 'react';
 import AlertBox from '../components/AlertBox';
 import Layout1 from '../components/Layouts/Layout1';
-import { useFetchGet } from '../utils/custom-hooks/fetch.hook';
+import { apiBaseUrl } from '../utils/config';
+import { useFetch } from '../utils/custom-hooks/fetch.hook';
 import { formatDate } from '../utils/helpers';
 
+const outletUrl = `${apiBaseUrl}/outlet`;
 const Outlet = () => {
-  const { data, isLoading, error, startFetch } = useFetchGet('/outlet');
+  const { data, isLoading, error, startFetch } = useFetch();
   useEffect(() => {
-    startFetch();
+    startFetch(outletUrl);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -1,20 +1,22 @@
 import { useContext, useEffect, useState } from "react";
-import { useFetchPost } from "../utils/custom-hooks/fetch.hook";
-import { cookieKeyAuth, cookieKeyUsername } from "../utils/config";
+import { useFetch } from "../utils/custom-hooks/fetch.hook";
+import { cookieKeyAuth, cookieKeyUsername, apiBaseUrl } from "../utils/config";
 import { AuthContext } from "../utils/contexts";
 import { getCookie, setCookie } from "../utils/helpers";
 import AlertBox from "../components/AlertBox";
 import { useHistory } from "react-router-dom";
 
+const loginUrl = `${apiBaseUrl}/login`;
+
 const Login = () => {
   const { setAuthed } = useContext(AuthContext);
   const [username, setUsername] = useState('');
-  const { data, isLoading, error, startFetch } = useFetchPost(`/login`, { username });
+  const { data, isLoading, error, startFetch } = useFetch();
   const history = useHistory();
 
   const submitForm = (e) => {
     e.preventDefault();
-    startFetch();
+    startFetch(loginUrl, 'POST', undefined, { username });
   }
 
   // if already login, redirect to root page

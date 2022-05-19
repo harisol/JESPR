@@ -17,7 +17,7 @@ Sucsessfully tested with Node.js v16.13.1
 ## Install Client  
 
 - Go to `client` directory then run `npm install`  
-- Set `proxy` in file `client/package.json` with your Server host to avoid CORS error when connecting your Server and Client. This `proxy` only has effect in development. In production, you must set `baseUrl` in `{project_root}/client/src/services/index.js`
+- Set `proxy` in file `client/package.json` with your Server host to avoid CORS error when connecting your Server and Client. This `proxy` only has effect in development. In production, you must set `apiBaseUrl` in `{project_root}/client/src/utils/config.js`
 
 ## Running Client
 
