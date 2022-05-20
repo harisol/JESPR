@@ -1,16 +1,17 @@
 import { useLayoutEffect, useState } from 'react';
-import { AuthContext } from './utils/contexts';
-import { eraseCookie } from './utils/helpers';
-import { cookieKeyAuth, apiBaseUrl } from './utils/config';
+import { eraseCookie, getCookie } from './utils/helpers';
+import { cookieKeyAuth, apiBaseUrl, cookieKeyUsername } from './utils/config';
 import { useFetch } from './utils/custom-hooks/fetch.hook';
 import Loader from './components/Loader';
 import Routes from './components/Routes';
+import { useDispatch } from 'react-redux';
+import { login } from './redux/user.slice';
 
 const checkTokenUrl = `${apiBaseUrl}/check-token`;
 
 export default function App() {
+  const dispatch = useDispatch();
   const [isTokenChecked, setIsTokenChecked] = useState(false);
-  const [authed, setAuthed] = useState(false);
   const { data, error, startFetch } = useFetch();
   
   useLayoutEffect(() => {
@@ -22,20 +23,22 @@ export default function App() {
     if (error) {
       console.log('auth error', error);
       eraseCookie(cookieKeyAuth);
+
       setIsTokenChecked(true);
     }
   }, [error]);
   
   useLayoutEffect(() => {
     if (data?.message === 'token valid') {
-      setAuthed(true);
+      // set username to state managed by redux
+      const username = getCookie(cookieKeyUsername);
+      dispatch(login({ username }));
+
       setIsTokenChecked(true);
     }
-  }, [data]);
+  }, [data, dispatch]);
 
-  return (
-    <AuthContext.Provider value={{ authed, setAuthed }}>
-      {isTokenChecked ? <Routes /> : <Loader />}
-    </AuthContext.Provider>
-  )
+  return isTokenChecked
+    ? <Routes />
+    : <Loader />;
 }

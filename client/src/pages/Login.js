@@ -1,15 +1,18 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFetch } from "../utils/custom-hooks/fetch.hook";
-import { cookieKeyAuth, cookieKeyUsername, apiBaseUrl } from "../utils/config";
-import { AuthContext } from "../utils/contexts";
-import { getCookie, setCookie } from "../utils/helpers";
+import { cookieKeyAuth, apiBaseUrl, cookieKeyUsername } from "../utils/config";
+import { setCookie } from "../utils/helpers";
 import AlertBox from "../components/AlertBox";
 import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../redux/user.slice";
 
 const loginUrl = `${apiBaseUrl}/login`;
 
 const Login = () => {
-  const { setAuthed } = useContext(AuthContext);
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.user);
+
   const [username, setUsername] = useState('');
   const { data, isLoading, error, startFetch } = useFetch();
   const history = useHistory();
@@ -21,20 +24,19 @@ const Login = () => {
 
   // if already login, redirect to root page
   useEffect(() => {
-    const cookie = getCookie(cookieKeyAuth);
-    if (cookie) {
+    if (user.authed) {
       history.push('/');
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user]);
   
   // login success, redirect to root page
   useEffect(() => {
     if (data.accessToken) {
       setCookie(cookieKeyAuth, data.accessToken, 2);
       setCookie(cookieKeyUsername, username, 2);
-      setAuthed(true);
-      history.push('/');
+
+      dispatch(login({ username }));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);

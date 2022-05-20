@@ -1,8 +1,8 @@
-import { AuthContext } from '../../utils/contexts';
-import { useContext } from 'react';
-import { eraseCookie, getCookie } from '../../utils/helpers';
+import { eraseCookie } from '../../utils/helpers';
 import { cookieKeyAuth, cookieKeyUsername } from '../../utils/config';
 import { NavLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../../redux/user.slice';
 
 const Layout1 = (props) => {
   return (
@@ -21,17 +21,18 @@ const Layout1 = (props) => {
 };
 
 const Header = () => {
-  const { setAuthed } = useContext(AuthContext);
-  const userName = getCookie(cookieKeyUsername);
+  const dispatch = useDispatch();
+  const userName = useSelector(state => state.user.username);
 
   const signOut = (e) => {
     e.preventDefault();
     if (!window.confirm('Are you sure?')) return;
 
     eraseCookie(cookieKeyAuth);
+    eraseCookie(cookieKeyUsername);
     console.log('cookie auth destroyed');
-    // change context value makes the child component of the context rerender
-    setAuthed(false);
+    
+    dispatch(logout());
   };
 
   return (
@@ -90,6 +91,14 @@ const Navigation = () => (
         <li className="nav-item">
           <NavLink to="/role" className={'nav-link'}>
             💻 Roles
+          </NavLink>
+        </li>
+        <li className="nav-item">
+          <NavLink to="/sample-redux" className={'nav-link'}>
+            <img src='./images/redux-logo.png' alt="sample-redux" style={{
+              width: '19px',
+              margin: '0 2px'
+            }} /> Sample Redux
           </NavLink>
         </li>
       </ul>

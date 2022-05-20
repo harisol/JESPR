@@ -1,11 +1,11 @@
-import { useContext } from 'react';
+import { useSelector } from 'react-redux';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Login from '../pages/Login';
 import NotFound from '../pages/NotFound';
 import Outlet from '../pages/Outlet';
 import Role from '../pages/Roles';
+import SampleRedux from '../pages/SampleRedux';
 import User from '../pages/User';
-import { AuthContext } from '../utils/contexts';
 
 const defaultPath = '/outlet';
 const paths = [
@@ -29,16 +29,22 @@ const paths = [
     component: Role,
     needAuth: true,
   },
+  {
+    path: '/sample-redux',
+    component: SampleRedux,
+    needAuth: true,
+    exact: true
+  },
 ];
 
-const ProtectedRoute = ({ component: Component, path, exact, needAuth }) => {
-  const { authed } = useContext(AuthContext);
+const ProtectedRoute = ({ component: Comp, path, exact, needAuth }) => {
+  const { authed } = useSelector(state => state.user);
   const node = (props) => {
     if (needAuth && !authed) {
       return <Redirect to="/login" />;
     }
     
-    return <Component />;
+    return <Comp />;
   }
 
   return (
