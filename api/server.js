@@ -1,6 +1,6 @@
 const express = require('express');
 const { notFoundError, handleError } = require('./etc/error-handler');
-const { customLog, registerAvailablePath } = require('./etc/middleware');
+const { customLog } = require('./etc/middleware');
 const router = require('./routes');
 
 const server = express();
@@ -12,7 +12,7 @@ server.use(customLog);
 // register routes with this prefix
 server.use('/api', router);
 
-registerAvailablePath(server);
+// registerAvailablePath(server);
 
 /** make sure to put code below after all available routes **/
 

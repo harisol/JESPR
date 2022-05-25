@@ -12,24 +12,63 @@ const { date } = require('../etc/helper');
 
 const router = Router();
 
-// register jwt middleware to this router
-router.use(checkToken);
-
 router.get('/', (_req, res) => {
     res.json({ message: `Today is ${date('dddd, DD MMM YYYY')}` });
 });
-router.get('/check-token', (_req, res) => res.json({ message: 'token valid' }));
 
 // for logout, just detroy token in client storage
 router.post('/login', validateLogin(), auth.login);
 
-router.get('/role', adminOnly, roleController.listRole);
-router.post('/role', validateCreateRole(), roleController.createRole);
 
-router.get('/user', userController.listUser);
-router.post('/user', validateCreateUser(), userController.createUser);
+/**
+ * this is the simpler way to add checkToken middleware,
+ * but it will keep checking the jwt on any invalid path
+ * (e.g api/{invalid-path}),
+ * hence, it's better adding middleware on every path
+ */
+// router.use(checkToken);
 
-router.post('/outlet', validateCreateOutlet(), outletController.createOutlet);
-router.get('/outlet', outletController.listOutlet);
+// add middleware checkToken to theese routers
+[
+    {
+        path: '/check-token',
+        method: 'get',
+        handlers: [
+            (_req, res) => res.json({ message: 'token valid' }),
+        ]
+    },
+    {
+        path: '/user',
+        method: 'get',
+        handlers: [userController.listUser]
+    },
+    {
+        path: '/user',
+        method: 'post',
+        handlers: [validateCreateUser(), userController.createUser]
+    },
+    {
+        path: '/role',
+        method: 'get',
+        handlers: [adminOnly, roleController.listRole]
+    },
+    {
+        path: '/role',
+        method: 'post',
+        handlers: [validateCreateRole(), roleController.createRole]
+    },
+    {
+        path: '/outlet',
+        method: 'get',
+        handlers: [outletController.listOutlet]
+    },
+    {
+        path: '/outlet',
+        method: 'post',
+        handlers: [validateCreateOutlet(), outletController.createOutlet]
+    },
+].forEach(({ path, method, handlers }) => {
+    router[method](path, checkToken, handlers);
+});
 
 module.exports = router;

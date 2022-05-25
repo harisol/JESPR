@@ -18,19 +18,6 @@ exports.customLog = (req, _res, next) => {
  * @type {import("express").RequestHandler}
  */
 exports.checkToken = (req, res, next) => {
-    // routes which don't need this middleware
-    const freeRoutes = [
-        '/',
-        '/login',
-    ];
-    const path = req.path;
-    const registeredPath = req.app.get('registeredPath');
-    
-    if (freeRoutes.includes(path) || !registeredPath.includes(path)) {
-        // skip middleware on freeRoutes or invalid routes
-        return next();
-    }
-
     verifyJWT(req.headers['x-access-token']).then(async decoded => {
         // check user with retrieved data
         const user = await User.findByPk(decoded.id);
@@ -68,9 +55,7 @@ exports.checkToken = (req, res, next) => {
 };
 
 /**
- * this is not a middleware. get available path
- * after registering all routes
- * 
+ * get available path after registering all routes
  * @param {import("express").Express} server 
  */
  exports.registerAvailablePath = (server) => {
@@ -89,6 +74,6 @@ exports.checkToken = (req, res, next) => {
         }
     });
 
-    // save this in express app to use in middleware
+    // save this in express app
     server.set('registeredPath', registeredPath);
 };
