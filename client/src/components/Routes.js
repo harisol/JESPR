@@ -11,27 +11,27 @@ const defaultPath = '/outlet';
 const paths = [
   {
     path: '/login',
-    component: Login,
+    page: Login,
     exact: true
   },
   {
     path: '/outlet',
-    component: Outlet,
+    page: Outlet,
     needAuth: true,
   },
   {
     path: '/user',
-    component: User,
+    page: User,
     needAuth: true,
   },
   {
     path: '/role',
-    component: Role,
+    page: Role,
     needAuth: true,
   },
 ];
 
-const ProtectedRoute = ({ component: Component, path, exact, needAuth }) => {
+const ProtectedRoute = ({ page: Component, path, exact, needAuth }) => {
   const { authed } = useContext(AuthContext);
   const node = (props) => {
     if (needAuth && !authed) {
